@@ -1,5 +1,6 @@
 import requests
 import csv
+import os
 
 def fetch_wikipedia_article(language, title):
     url = f"https://{language}.wikipedia.org/api/rest_v1/page/summary/{title}"
@@ -12,7 +13,12 @@ def fetch_wikipedia_article(language, title):
 
 
 def save_to_csv(data, filename):
-    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+    directory = "\dataset"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    
+    filepath = os.path.join(directory, filename)
+    with open(filepath, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Title', 'First Paragraph'])
         for title, paragraph in data:
@@ -21,25 +27,46 @@ def save_to_csv(data, filename):
 
 def main():
     # todo automate this to get multiple Similar articles instead of fixed
-    english_titles = ["Adolf_Hitler", "Winston_Churchill"]
-    ilocano_titles = ["Adolf_Hitler", "Winston_Churchill"]
+    # english_titles = ["Adolf_Hitler", "Winston_Churchill"]
+    # ilocano_titles = ["Adolf_Hitler", "Winston_Churchill"]
+
+    # english_data = []
+    # ilocano_data = []
+
+    # for title in english_titles:
+    #     eng_title, eng_paragraph = fetch_wikipedia_article("en", title)
+    #     if eng_title and eng_paragraph:
+    #         english_data.append((eng_title, eng_paragraph))
+
+    # for title in ilocano_titles:
+    #     ilo_title, ilo_paragraph = fetch_wikipedia_article("ilo", title)
+    #     if ilo_title and ilo_paragraph:
+    #         ilocano_data.append((ilo_title, ilo_paragraph))
+
+    # save_to_csv(english_data, 'english.csv')
+    # save_to_csv(ilocano_data, 'ilokano.csv')
+
+    # use historical figures so that english and ilocano titles are same
+    titles = ["Jose_Rizal",
+    "Ferdinand_Magellan",
+    "Emilio_Aguinaldo"]
 
     english_data = []
     ilocano_data = []
 
-    for title in english_titles:
+    for title in titles:
         eng_title, eng_paragraph = fetch_wikipedia_article("en", title)
-        if eng_title and eng_paragraph:
-            english_data.append((eng_title, eng_paragraph))
-
-    for title in ilocano_titles:
         ilo_title, ilo_paragraph = fetch_wikipedia_article("ilo", title)
-        if ilo_title and ilo_paragraph:
+
+        #check if it exists for both
+        if eng_title and eng_paragraph and ilo_title and ilo_paragraph:
+            english_data.append((eng_title, eng_paragraph))
             ilocano_data.append((ilo_title, ilo_paragraph))
+        else:
+            print("missing wikipedia data available for "+title)
 
     save_to_csv(english_data, 'english.csv')
     save_to_csv(ilocano_data, 'ilokano.csv')
-
 
 if __name__ == "__main__":
     main()
