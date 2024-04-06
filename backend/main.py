@@ -20,6 +20,7 @@ def save_to_csv(data, filename):
 
 
 def main():
+    # todo automate this to get multiple Similar articles instead of fixed
     english_titles = ["Adolf_Hitler", "Winston_Churchill"]
     ilocano_titles = ["Adolf_Hitler", "Winston_Churchill"]
 
