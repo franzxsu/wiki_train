@@ -2,6 +2,7 @@ import requests
 import csv
 import os
 
+
 def fetch_wikipedia_article(language, title):
     url = f"https://{language}.wikipedia.org/api/rest_v1/page/summary/{title}"
     response = requests.get(url)
@@ -26,47 +27,48 @@ def save_to_csv(data, filename):
 
 
 def main():
-    # todo automate this to get multiple Similar articles instead of fixed
-    # english_titles = ["Adolf_Hitler", "Winston_Churchill"]
-    # ilocano_titles = ["Adolf_Hitler", "Winston_Churchill"]
+    num_queries = 10000  # Number of queries to generate
 
-    # english_data = []
-    # ilocano_data = []
+    # List of historical figures for queries
+    titles = [
+        "Jose_Rizal",
+        "Ferdinand_Magellan",
+        "Emilio_Aguinaldo",
+        "Andres_Bonifacio",
+        "Manuel_L._Quezon",
+        "Apolinario_Mabini",
+        "Juan_Luna",
+        "Gregorio_del_Pilar",
+        "Lapu-Lapu"
+    ]
 
-    # for title in english_titles:
-    #     eng_title, eng_paragraph = fetch_wikipedia_article("en", title)
-    #     if eng_title and eng_paragraph:
-    #         english_data.append((eng_title, eng_paragraph))
-
-    # for title in ilocano_titles:
-    #     ilo_title, ilo_paragraph = fetch_wikipedia_article("ilo", title)
-    #     if ilo_title and ilo_paragraph:
-    #         ilocano_data.append((ilo_title, ilo_paragraph))
-
-    # save_to_csv(english_data, 'english.csv')
-    # save_to_csv(ilocano_data, 'ilokano.csv')
-
-    # use historical figures so that english and ilocano titles are same
-    titles = ["Jose_Rizal",
-    "Ferdinand_Magellan",
-    "Emilio_Aguinaldo"]
+    # Generate queries for both languages
+    english_queries = generate_queries(num_queries, titles)
+    ilocano_queries = generate_queries(num_queries, titles)
 
     english_data = []
     ilocano_data = []
 
-    for title in titles:
-        eng_title, eng_paragraph = fetch_wikipedia_article("en", title)
-        ilo_title, ilo_paragraph = fetch_wikipedia_article("ilo", title)
+    for eng_title, ilo_title in zip(english_queries, ilocano_queries):
+        eng_title, eng_paragraph = fetch_wikipedia_article("en", eng_title)
+        ilo_title, ilo_paragraph = fetch_wikipedia_article("ilo", ilo_title)
 
-        #check if it exists for both
+        # Check if data exists for both languages
         if eng_title and eng_paragraph and ilo_title and ilo_paragraph:
             english_data.append((eng_title, eng_paragraph))
             ilocano_data.append((ilo_title, ilo_paragraph))
         else:
-            print("missing wikipedia data available for "+title)
+            print("Missing Wikipedia data available for", eng_title, ilo_title)
 
     save_to_csv(english_data, 'english.csv')
-    save_to_csv(ilocano_data, 'ilokano.csv')
+    save_to_csv(ilocano_data, 'ilocano.csv')
+
+def generate_queries(num_queries, titles):
+    queries = []
+    for _ in range(num_queries):
+        query = random.choice(titles)
+        queries.append(query)
+    return queries
 
 if __name__ == "__main__":
     main()
