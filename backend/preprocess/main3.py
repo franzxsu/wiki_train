@@ -4,7 +4,7 @@ import re
 pattern = r'(\d+)\s+(.+?)\s+(\d+)\s+(.+?)(?=\d|$)'
 
 # Open the input file in binary mode and decode with UTF-8
-with open('outputclean.txt', 'rb') as file:
+with open('output3.txt', 'rb') as file:
     text = file.read().decode('utf-8', errors='ignore')
 
 # Find all matches using the regex pattern
