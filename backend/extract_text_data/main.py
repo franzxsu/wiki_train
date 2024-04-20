@@ -14,21 +14,30 @@ def fetch_wikipedia_article(language, title):
 
 
 
-    
+def preprocess_text(text):
+    # Replace double quotation marks with single quotation marks
+    text = text.replace('"', "'")
+    # Add <START> and <END> tokens
+    text = f"<START> {text} <END>"
+    return text
+
 def save_to_csv(data, filename):
     with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Title', 'First Paragraph'])
         for title, paragraph in data:
+            # Preprocess paragraph text
+            paragraph = preprocess_text(paragraph)
             writer.writerow([title, paragraph])
+
 
 
 
 
 def main():
     # Read titles from CSV file
-    titles_df = pd.read_csv('clean_titles.csv')  # Adjust filename as needed
-    titles = titles_df['name'].tolist()  # Assuming 'Title' is the column name
+    titles_df = pd.read_csv('clean_titles.csv')
+    titles = titles_df['name'].tolist()
 
     english_data = []
     ilocano_data = []
