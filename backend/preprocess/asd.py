@@ -4,7 +4,7 @@ import re
 # pattern = re.compile(r"CAPITULO\s+\d+\s+CHAPTER\s+\d+")
 
 
-pattern = re.compile(r"ROMANS\s+\d+")
+pattern = re.compile(r"\d+\s+\n\s+SN. LUCAS\s+\d+")
 
 # Read from the file
 with open('output3.txt', 'r', encoding='utf-8') as file:
