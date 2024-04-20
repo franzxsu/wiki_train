@@ -1,9 +1,10 @@
-import pdfplumber
+import PyPDF2
 
 pdf_path = '26464371-pie-bible.pdf'
 text_data = []
-with pdfplumber.open(pdf_path) as pdf:
-    for page in pdf.pages:
+with open(pdf_path, 'rb') as pdf_file:
+    reader = PyPDF2.PdfReader(pdf_file)
+    for page in reader.pages:
         text_data.append(page.extract_text())
 
 txt_path = 'output.txt'
